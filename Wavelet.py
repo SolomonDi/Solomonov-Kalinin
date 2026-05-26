@@ -8,6 +8,7 @@ import io_tools as io
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from scipy.signal import hilbert
 import os
 
 plt.ioff()
@@ -15,21 +16,9 @@ plt.ioff()
 SeismogramData = namedtuple('SeismogramData', ['filename', 'trace', 'n_samples', 'scale_factor', 'sample_rate'])
 Task = namedtuple('Task', ['exp_num', 'wavelet', 'start_sec', 'end_sec', 'level'])
 
-def hilbert(signal):
-    N = len(signal)
-    X = np.fft.fft(signal)
-    h = np.zeros(N)
-    if N % 2 == 0:
-        h[0] = 1
-        h[N // 2] = 1
-        h[1:N // 2] = 2
-    else:
-        h[0] = 1
-        h[1:(N + 1) // 2] = 2
-    Y = X * h
-    return np.fft.ifft(Y)
-
 def compute_envelope(signal):
+    if len(signal) == 0:
+        return signal.copy()
     return np.abs(hilbert(signal))
 
 def wavelet_denoise(signal, wavelet, level, method='soft'):
@@ -132,7 +121,7 @@ class SeismoGUI:
         
         ttk.Label(self.control_frame, text="Базовый вейвлет:").pack(anchor=tk.W, pady=(5, 0))
         self.wavelet_var = tk.StringVar(value='db8')
-        wavelets = ['db2', 'db4', 'db6', 'db8', 'db10', 'sym2', 'sym4', 'sym6', 'sym8', 'coif1', 'coif2', 'coif3', 'haar']
+        wavelets = ['db2', 'db4', 'db6', 'db8', 'db10', 'sym2', 'sym4', 'sym6', 'sym8', 'coif1', 'coif2', 'coif3', 'haar', 'dmey']
         self.wavelet_combo = ttk.Combobox(self.control_frame, textvariable=self.wavelet_var, 
                                           values=wavelets, state="readonly", width=25)
         self.wavelet_combo.pack(fill=tk.X, pady=5)
