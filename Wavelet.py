@@ -119,7 +119,7 @@ class SeismoGUI:
     def setup_controls(self):
         ttk.Label(self.control_frame, text="УПРАВЛЕНИЕ", style="Header.TLabel").pack(anchor=tk.W, pady=(0, 15))
         
-        self.load_btn = ttk.Button(self.control_frame, text="📁 Загрузить файлы", command=self.load_files)
+        self.load_btn = ttk.Button(self.control_frame, text="Загрузить файлы", command=self.load_files)
         self.load_btn.pack(fill=tk.X, pady=(0, 15))
         
         self.info_frame = ttk.LabelFrame(self.control_frame, text="Информация", padding=10)
