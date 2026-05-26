@@ -3,9 +3,6 @@ import struct
 import os
 
 def load_data(filename, start_time=0, duration=-1, triger=0):
-    """
-    Чтение сейсмических данных из файла в PC-формате.
-    """
     err = 0
     trace = np.array([])
     n_samples = 0
@@ -16,15 +13,12 @@ def load_data(filename, start_time=0, duration=-1, triger=0):
         with open(filename, 'rb') as file:
             print(f"(УВЕДОМЛЕНИЕ) Чтение файла {filename}.")
             
-            # 1. Читаем sample_type (2 байта) по смещению 38:
             file.seek(38)
             sample_type = struct.unpack('<h', file.read(2))[0]
             
-            # 2. Читаем scale_factor (8 байт, double) по смещению 14:
             file.seek(14)
             scale_factor = struct.unpack('<d', file.read(8))[0]
             
-            # 3. Читаем sample_rate (2 байта, unsigned short) по смещению 32:
             file.seek(32)
             sample_rate = struct.unpack('<H', file.read(2))[0]
             

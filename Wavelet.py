@@ -15,8 +15,6 @@ plt.ioff()
 SeismogramData = namedtuple('SeismogramData', ['filename', 'trace', 'n_samples', 'scale_factor', 'sample_rate'])
 Task = namedtuple('Task', ['exp_num', 'wavelet', 'start_sec', 'end_sec', 'level'])
 
-# ======================== МАТЕМАТИКА ========================
-
 def hilbert(signal):
     N = len(signal)
     X = np.fft.fft(signal)
@@ -87,8 +85,6 @@ def compute_snr_astra(original_trace, filtered_trace, fs, signal_start, signal_e
     if noise_std == 0.0:
         return float('nan')
     return float(max_signal / noise_std)
-
-# ======================== GUI ========================
 
 class SeismoGUI:
     def __init__(self, root):
@@ -168,7 +164,6 @@ class SeismoGUI:
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
         
     def load_files(self):
-        """Загрузка файлов через диалог выбора"""
         filepaths = filedialog.askopenfilenames(
             title="Выберите файлы сейсмограмм",
             filetypes=[("Сейсмические файлы", "*.01x *.01y *.01z *.dat *.bin"), ("Все файлы", "*.*")]
@@ -195,7 +190,6 @@ class SeismoGUI:
         self.draw_original_traces()
         
     def compute_initial_snrs(self):
-        """Вычисляет изначальный S/N для всех загруженных трасс"""
         self.initial_snrs = []
         try:
             start_sec = float(self.start_var.get().replace(',', '.'))
@@ -208,7 +202,6 @@ class SeismoGUI:
             self.initial_snrs.append(snr)
     
     def update_info_display(self):
-        """Обновляет информационную панель"""
         self.files_count_label.config(text=f"Файлов: {len(self.seismograms)}")
         snr_lines = []
         for i, (seism, snr) in enumerate(zip(self.seismograms, self.initial_snrs)):
@@ -225,7 +218,6 @@ class SeismoGUI:
         self.snr_label.config(text=snr_text)
         
     def create_plots(self):
-        """Создаёт область для графиков"""
         for widget in self.plot_frame.winfo_children():
             widget.destroy()
         
@@ -244,7 +236,6 @@ class SeismoGUI:
         self.toolbar.pack(side=tk.BOTTOM, fill=tk.X)
         
     def draw_original_traces(self):
-        """Отрисовка исходных трасс с начальным S/N"""
         for i, ax in enumerate(self.axes):
             ax.clear()
             seism = self.seismograms[i]
@@ -274,7 +265,6 @@ class SeismoGUI:
         self.canvas.draw()
         
     def run_analysis(self):
-        """Запускает анализ с фильтрацией"""
         if not self.seismograms:
             messagebox.showwarning("Warning", "Сначала загрузите файлы!")
             return
@@ -299,7 +289,6 @@ class SeismoGUI:
         self.root.config(cursor="")
         
     def process_task(self, task):
-        """Выполняет фильтрацию для всех трасс"""
         filtered_traces = []
         envelopes = []
         snr_values = []
@@ -334,7 +323,6 @@ class SeismoGUI:
         }
         
     def draw_filtered_results(self, res):
-        """Отрисовка результатов фильтрации"""
         task = res['task']
         for i, ax in enumerate(self.axes):
             ax.clear()
@@ -375,7 +363,7 @@ class SeismoGUI:
 
 def main():
     root = tk.Tk()
-    app = SeismoGUI(root)  # Без автозагрузки — файлы выбираются вручную
+    app = SeismoGUI(root)
     root.mainloop()
 
 if __name__ == "__main__":
