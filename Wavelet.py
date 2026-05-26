@@ -150,7 +150,7 @@ class SeismoGUI:
         self.end_var = tk.StringVar(value="15.0")
         ttk.Entry(self.control_frame, textvariable=self.end_var, width=25).pack(fill=tk.X, pady=5)
         
-        self.run_btn = ttk.Button(self.control_frame, text="▶ Применить фильтрацию", command=self.run_analysis)
+        self.run_btn = ttk.Button(self.control_frame, text="Применить фильтрацию", command=self.run_analysis)
         self.run_btn.pack(fill=tk.X, pady=25)
         
     def create_placeholder_plot(self):
